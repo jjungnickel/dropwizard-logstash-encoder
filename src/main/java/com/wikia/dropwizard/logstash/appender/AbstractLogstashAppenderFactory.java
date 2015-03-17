@@ -28,6 +28,19 @@ abstract class AbstractLogstashAppenderFactory extends AbstractAppenderFactory {
 
   protected HashMap<String, String> fieldNames;
 
+  @NotNull
+  protected String project;
+
+  @JsonProperty
+  public String getProject() {
+    return project;
+  }
+
+  @JsonProperty
+  public void setProject(String project) {
+    this.project = project;
+  }
+
   @JsonProperty
   public void setHost(String host) {
     this.host = host;
@@ -98,9 +111,10 @@ abstract class AbstractLogstashAppenderFactory extends AbstractAppenderFactory {
     this.fieldNames = fieldNames;
   }
 
-  protected String renderCustomFields(String applicationName) {
+  protected String renderCustomFields(String application) {
       // always set the application name except when overridden
-      customFields.putIfAbsent("applicationName", applicationName);
+      customFields.putIfAbsent("application", application);
+      customFields.putIfAbsent("project", project);
 
       try {
           return LogstashAppenderFactoryHelper.getCustomFieldsFromHashMap(customFields);
